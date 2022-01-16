@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs'); //biblioteca para manipular arquivos
 
 //o que é um buffer?
 //Quando devo utilizar buffer e quando devo utilizar stream?
@@ -6,14 +6,17 @@ const fs = require('fs');
 /*
     trocamos readFile por createReadStream
     readFile é uma função síncrona e trava a execução do código
-
-
+    Stream é assíncrona. A execução da função é feita externamente por uma API
 */
 
 //o que é stream?
-fs.createReadStream('./assets/salsicha.jpg')
-    .pipe(fs.createWriteStream('./assets/salsicha-stream.jpg'))
-    .on('finish', () => console.log('Imagem foi escrita com sucesso'));
+module.exports = (caminho, nomeDoArquivo, callbackImagemCriada) => {
+    const novoCaminho = `./assets/imagens/${nomeDoArquivo}`
+    fs.createReadStream(caminho)
+        .pipe(fs.createWriteStream(novoCaminho))
+        .on('finish', () => callbackImagemCriada(novoCaminho));
+
+}
 
 /*
     Assíncrono: acontece em paralelo com outras "tarefas"

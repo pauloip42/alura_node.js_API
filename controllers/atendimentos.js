@@ -2,6 +2,13 @@
 //res - é o que devolvemos (enviamos ou renderizamos na tela) - o que a api devolve
 //app.get('/', ()=>); get na rota '/'
 
+/*
+    O que o controller deve fazer?
+    - Dizer para onde enviar as informações
+    - Responder o cliente
+    - Validações de segurança
+*/
+
 const atendimentos = require('../models/atendimentos');
 const Atendimento = require('../models/atendimentos')
 
@@ -23,7 +30,9 @@ module.exports = app => {
     app.post('/atendimentos', (req, res) => {
         const atendimento = req.body;
 
-        Atendimento.adiciona(atendimento, res);
+        Atendimento.adiciona(atendimento)
+            .then(atendimentoCadastrado => res.status(201).json(atendimentoCadastrado))
+            .catch(erros => res.status(400).json(erros))
     })
 
     //alterar dados

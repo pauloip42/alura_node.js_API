@@ -1,4 +1,5 @@
 const fs = require('fs'); //biblioteca para manipular arquivos
+const path = require('path');
 
 //o que é um buffer?
 //Quando devo utilizar buffer e quando devo utilizar stream?
@@ -11,11 +12,22 @@ const fs = require('fs'); //biblioteca para manipular arquivos
 
 //o que é stream?
 module.exports = (caminho, nomeDoArquivo, callbackImagemCriada) => {
-    const novoCaminho = `./assets/imagens/${nomeDoArquivo}`
-    fs.createReadStream(caminho)
-        .pipe(fs.createWriteStream(novoCaminho))
-        .on('finish', () => callbackImagemCriada(novoCaminho));
+    
+    const tiposValidos = ['jpg', 'png', 'jpeg'];
+    const tipo = path.extname(caminho);
+    const tipoValido = tiposValidos.indexOf(tipo.substring(1)) !== -1;
 
+    if(!tipoValido) {
+        const erro = "Tipo é inválido"
+        console.log('Erro! Tipo inválido');
+        callbackImagemCriada(erro);
+    } else {
+        const novoCaminho = `./assets/imagens/${nomeDoArquivo}${tipo}`
+    
+        fs.createReadStream(caminho)
+            .pipe(fs.createWriteStream(novoCaminho))
+            .on('finish', () => callbackImagemCriada(false, novoCaminho));
+    }
 }
 
 /*
